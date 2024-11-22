@@ -70,6 +70,7 @@ export class DonorScroll {
     if (existingTicker) {
       existingTicker.parentElement.insertBefore(parentContainer, existingTicker);
       parentContainer.appendChild(existingTicker);
+      existingTicker.setAttribute("role", "marquee");
     }
   }
 
