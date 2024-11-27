@@ -83,10 +83,9 @@ export class DonorScroll {
         this.addStyles();
         this.addAccessibilityControls();
         this.addHoverAndFocusControls();
-  
-        // Always initialize scrolling, but respect reduced motion preference
-        this.isPaused = this.prefersReducedMotion;
-        this.startScrolling();
+        if (!this.prefersReducedMotion) {
+          this.startScrolling();
+        }
       });
     } else {
       this.createTickerContainer();
@@ -94,10 +93,9 @@ export class DonorScroll {
       this.addStyles();
       this.addAccessibilityControls();
       this.addHoverAndFocusControls();
-  
-      // Always initialize scrolling, but respect reduced motion preference
-      this.isPaused = this.prefersReducedMotion;
-      this.startScrolling();
+      if (!this.prefersReducedMotion) {
+        this.startScrolling();
+      }
     }
   }
 
@@ -120,7 +118,6 @@ export class DonorScroll {
     if (existingTicker) {
       existingTicker.parentElement.insertBefore(parentContainer, existingTicker);
       parentContainer.appendChild(existingTicker);
-      existingTicker.setAttribute("role", "marquee");
     }
   }
 
@@ -243,7 +240,7 @@ export class DonorScroll {
   addAccessibilityControls() {
     const parentContainer = document.querySelector("#ticker-container");
     if (!parentContainer) return;
-  
+
     const pauseButton = document.createElement("button");
     pauseButton.style.cssText = `
       padding: 0.5rem 1rem;
@@ -256,59 +253,59 @@ export class DonorScroll {
       margin: 0;
     `;
     pauseButton.setAttribute("type", "button"); // Explicitly set button type
-  
+
     const FALLBACK_MIN_WIDTH = 75; // Fallback min-width in pixels
-  
+
     // Retrieve saved state and min-width from localStorage
     const savedState = this.getLocalStorage("tickerState");
     const savedMinWidth = parseInt(this.getLocalStorage("buttonMinWidth"), 10);
-  
+
     // Set initial state and label
     this.isPaused = savedState === "paused";
     pauseButton.innerText = this.isPaused ? "Play" : "Pause";
     pauseButton.setAttribute("aria-label", this.isPaused ? "Play scrolling" : "Pause scrolling");
-  
+
     // Set min-width using fallback or saved value
     if (savedMinWidth && savedMinWidth >= FALLBACK_MIN_WIDTH) {
       pauseButton.style.minWidth = `${savedMinWidth}px`;
     } else {
       pauseButton.style.minWidth = `${FALLBACK_MIN_WIDTH}px`;
     }
-  
+
     // Append the button to the container
     parentContainer.insertAdjacentElement("afterbegin", pauseButton);
-  
+
     // After the button is rendered, calculate its actual width
     const buttonWidth = pauseButton.offsetWidth;
-  
+
     // Update min-width if the actual width is larger than fallback
     if (buttonWidth > FALLBACK_MIN_WIDTH) {
       pauseButton.style.minWidth = `${buttonWidth}px`;
       this.setLocalStorage("buttonMinWidth", buttonWidth); // Save the calculated min-width
     }
-  
+
     // Add toggle functionality
     pauseButton.onclick = (event) => {
       event.preventDefault(); // Prevent default behavior
       this.isPaused = !this.isPaused;
-  
+
       // Update label and aria-label
       pauseButton.innerText = this.isPaused ? "Play" : "Pause";
       pauseButton.setAttribute(
         "aria-label",
         this.isPaused ? "Play scrolling" : "Pause scrolling"
       );
-  
+
       // Recalculate and update min-width if the button size changes
       const newButtonWidth = pauseButton.offsetWidth;
       if (newButtonWidth > FALLBACK_MIN_WIDTH) {
         pauseButton.style.minWidth = `${newButtonWidth}px`;
         this.setLocalStorage("buttonMinWidth", newButtonWidth);
       }
-  
+
       // Save the state in localStorage
       this.setLocalStorage("tickerState", this.isPaused ? "paused" : "playing");
-  
+
       // Update the ticker's data-playing attribute
       const tickerContainer = document.querySelector("#donor-ticker");
       if (tickerContainer) {
@@ -323,23 +320,23 @@ export class DonorScroll {
   addHoverAndFocusControls() {
     const tickerContainer = document.querySelector("#donor-ticker");
     if (!tickerContainer) return;
-  
+
     // Ensure ticker is focusable for keyboard navigation
     tickerContainer.setAttribute("tabindex", "0");
-  
+
     // Pause on hover and update data-hovered
     tickerContainer.addEventListener("mouseenter", () => {
       this.isPaused = true; // Pause scrolling
       tickerContainer.setAttribute("data-hovered", "true");
       tickerContainer.setAttribute("data-playing", "false");
     });
-  
+
     tickerContainer.addEventListener("mouseleave", () => {
       this.isPaused = false; // Resume scrolling
       tickerContainer.setAttribute("data-hovered", "false");
       tickerContainer.setAttribute("data-playing", "true");
     });
-  
+
     // Pause on focus
     tickerContainer.addEventListener("focusin", () => {
       this.wasPausedBeforeFocus = this.isPaused; // Track if it was paused by the user
@@ -347,7 +344,7 @@ export class DonorScroll {
       tickerContainer.setAttribute("data-focused", "true");
       tickerContainer.setAttribute("data-playing", "false");
     });
-  
+
     // Resume on blur (only if it wasn't paused by the user)
     tickerContainer.addEventListener("focusout", () => {
       tickerContainer.setAttribute("data-focused", "false");
