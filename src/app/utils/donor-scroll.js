@@ -20,9 +20,55 @@ export class DonorScroll {
     } else {
       // Default donors
       this.donors = [
-        "Anonymous chipped in $15",
-        "Marty F. chipped in $50",
-        "Cynthia C. chipped in $3",
+        "Aniko J. donated $103.00 ",
+        "Alaine C. donated $36.05 ",
+        "Crystal C. donated $154.50 ",
+        "Dianne M. donated $51.50 ",
+        "David L. donated $72.10 ",
+        "Stuart S. donated $10.00 ",
+        "John A. donated $154.50 ",
+        "Katherine H. donated $30.00 ",
+        "Lyn A. donated $18.00 ",
+        "Stephanie W. donated $8.00 ",
+        "Faith Z. donated $36.05 ",
+        "Susan B. donated $55.62 ",
+        "Ronald B. donated $100.00 ",
+        "Sandra A. donated $30.90 ",
+        "Jennifer R. donated $25.75 ",
+        "Wendy M. donated $103.00 ",
+        "Bonnie E. donated $10.30 ",
+        "Linda O. donated $36.05 ",
+        "Vicki A. donated $25.75 ",
+        "Barbara P. donated $12.00 ",
+        "Kathleen W. donated $300.00 ",
+        "Severine B. donated $100.00 ",
+        "Susan L. donated $50.00 ",
+        "Stephanie C. donated $25.75 ",
+        "Lynda G. donated $35.00 ",
+        "Ruth Marie M. donated $50.00 ",
+        "Ann K. donated $51.50 ",
+        "Rafael C. donated $20.60 ",
+        "Judith H. donated $30.00 ",
+        "Francesca K. donated $30.00 ",
+        "Ruth R. donated $60.00 ",
+        "A.J. S. donated $51.50 ",
+        "Elaine C. donated $30.90 ",
+        "Lara M. donated $100.00 ",
+        "Zora V. donated $257.50 ",
+        "Karen B. donated $35.00 ",
+        "Russell L. donated $51.50 ",
+        "Sue G. donated $25.00 ",
+        "Susanne M. donated $25.00 ",
+        "Dennis B. donated $30.90 ",
+        "James A. donated $51.50 ",
+        "Linda K. donated $10.30 ",
+        "Luka W. donated $15.00 ",
+        "Mary D. donated $51.50 ",
+        "Wendy L. donated $30.00 ",
+        "Debby R. donated $25.75 ",
+        "Suzy G. donated $18.00 ",
+        "Inger H. donated $55.00 ",
+        "Linda L. donated $20.00 ",
       ];
     }
 
@@ -37,9 +83,10 @@ export class DonorScroll {
         this.addStyles();
         this.addAccessibilityControls();
         this.addHoverAndFocusControls();
-        if (!this.prefersReducedMotion) {
-          this.startScrolling();
-        }
+  
+        // Always initialize scrolling, but respect reduced motion preference
+        this.isPaused = this.prefersReducedMotion;
+        this.startScrolling();
       });
     } else {
       this.createTickerContainer();
@@ -47,9 +94,10 @@ export class DonorScroll {
       this.addStyles();
       this.addAccessibilityControls();
       this.addHoverAndFocusControls();
-      if (!this.prefersReducedMotion) {
-        this.startScrolling();
-      }
+  
+      // Always initialize scrolling, but respect reduced motion preference
+      this.isPaused = this.prefersReducedMotion;
+      this.startScrolling();
     }
   }
 
@@ -64,6 +112,8 @@ export class DonorScroll {
       display: flex;
       align-items: center;
       gap: 1rem;
+      border: 2px solid #132a44;
+      margin-bottom: 1rem;
     `;
 
     const existingTicker = document.querySelector("#donor-ticker");
@@ -198,12 +248,14 @@ export class DonorScroll {
     pauseButton.style.cssText = `
       padding: 0.5rem 1rem;
       font-size: 1rem;
-      background-color: #007BFF;
+      background-color: #132a44;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin: 0;
     `;
+    pauseButton.setAttribute("type", "button"); // Explicitly set button type
   
     const FALLBACK_MIN_WIDTH = 75; // Fallback min-width in pixels
   
@@ -236,7 +288,8 @@ export class DonorScroll {
     }
   
     // Add toggle functionality
-    pauseButton.onclick = () => {
+    pauseButton.onclick = (event) => {
+      event.preventDefault(); // Prevent default behavior
       this.isPaused = !this.isPaused;
   
       // Update label and aria-label
