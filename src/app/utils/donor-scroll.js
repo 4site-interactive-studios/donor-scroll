@@ -112,6 +112,7 @@ export class DonorScroll {
       gap: 1rem;
       border: 2px solid #132a44;
       margin-bottom: 1rem;
+      max-width: calc(100vw - 40px);
     `;
 
     const existingTicker = document.querySelector("#donor-ticker");
@@ -320,23 +321,30 @@ export class DonorScroll {
   addHoverAndFocusControls() {
     const tickerContainer = document.querySelector("#donor-ticker");
     if (!tickerContainer) return;
-
+  
     // Ensure ticker is focusable for keyboard navigation
     tickerContainer.setAttribute("tabindex", "0");
-
+  
+    // Track whether the user explicitly paused the ticker
+    let userPaused = this.isPaused;
+  
     // Pause on hover and update data-hovered
     tickerContainer.addEventListener("mouseenter", () => {
-      this.isPaused = true; // Pause scrolling
-      tickerContainer.setAttribute("data-hovered", "true");
-      tickerContainer.setAttribute("data-playing", "false");
+      if (!this.isPaused) {
+        this.isPaused = true; // Temporarily pause scrolling
+        tickerContainer.setAttribute("data-hovered", "true");
+        tickerContainer.setAttribute("data-playing", "false");
+      }
     });
-
+  
     tickerContainer.addEventListener("mouseleave", () => {
-      this.isPaused = false; // Resume scrolling
       tickerContainer.setAttribute("data-hovered", "false");
-      tickerContainer.setAttribute("data-playing", "true");
+      if (!userPaused) {
+        this.isPaused = false; // Resume scrolling only if not paused by the user
+        tickerContainer.setAttribute("data-playing", "true");
+      }
     });
-
+  
     // Pause on focus
     tickerContainer.addEventListener("focusin", () => {
       this.wasPausedBeforeFocus = this.isPaused; // Track if it was paused by the user
@@ -344,14 +352,22 @@ export class DonorScroll {
       tickerContainer.setAttribute("data-focused", "true");
       tickerContainer.setAttribute("data-playing", "false");
     });
-
+  
     // Resume on blur (only if it wasn't paused by the user)
     tickerContainer.addEventListener("focusout", () => {
       tickerContainer.setAttribute("data-focused", "false");
-      if (!this.wasPausedBeforeFocus) {
+      if (!this.wasPausedBeforeFocus && !userPaused) {
         this.isPaused = false; // Resume scrolling
         tickerContainer.setAttribute("data-playing", "true");
       }
     });
+  
+    // Update userPaused state on button click
+    const pauseButton = document.querySelector("#ticker-container button");
+    if (pauseButton) {
+      pauseButton.addEventListener("click", () => {
+        userPaused = this.isPaused;
+      });
+    }
   }
 }
