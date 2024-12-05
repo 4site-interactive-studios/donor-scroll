@@ -9,7 +9,10 @@ export class DonorScroll {
       return;
 
     this.donors = [];
-    this.isPaused = false;
+    // Retrieve saved state from localStorage
+    const savedState = this.getLocalStorage("tickerState");
+    // Set initial state and label
+    this.isPaused = savedState === "paused";
     this.layout = "normal";
     this.prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion)"
@@ -79,22 +82,22 @@ export class DonorScroll {
   init() {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", () => {
+        if (this.prefersReducedMotion) {
+          this.isPaused = true;
+        }
         this.createTickerContainer();
         this.displayDonations(this.getDonors());
         this.addAccessibilityControls();
         this.addHoverAndFocusControls();
-        if (!this.prefersReducedMotion) {
-          this.startScrolling();
-        }
       });
     } else {
+      if (this.prefersReducedMotion) {
+        this.isPaused = true;
+      }
       this.createTickerContainer();
       this.displayDonations(this.getDonors());
       this.addAccessibilityControls();
       this.addHoverAndFocusControls();
-      if (!this.prefersReducedMotion) {
-        this.startScrolling();
-      }
     }
   }
 
@@ -104,6 +107,7 @@ export class DonorScroll {
 
     const existingTicker = document.querySelector("#donor-ticker");
     if (existingTicker) {
+      existingTicker.dataset.playing = this.isPaused ? "false" : "true";
       if ("layout" in existingTicker.dataset) {
         this.layout = existingTicker.dataset.layout;
         parentContainer.dataset.layout = this.layout;
@@ -179,11 +183,6 @@ export class DonorScroll {
     const pauseButton = document.createElement("button");
     pauseButton.setAttribute("type", "button"); // Explicitly set button type
 
-    // Retrieve saved state from localStorage
-    const savedState = this.getLocalStorage("tickerState");
-
-    // Set initial state and label
-    this.isPaused = savedState === "paused";
     pauseButton.innerText = this.isPaused ? "Play" : "Pause";
     pauseButton.setAttribute(
       "aria-label",
