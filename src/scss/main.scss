@@ -41,10 +41,7 @@ body:has(#ticker-container[data-layout="full"]) {
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
-  font-family: "Open Sans", Arial, Helvetica, sans-serif;
-  color: #555;
   line-height: 1.4;
-  font-weight: 700;
   &[data-playing="false"] {
     .ticker {
       animation-play-state: paused;
