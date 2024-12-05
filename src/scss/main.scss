@@ -25,13 +25,14 @@ body:has(#ticker-container[data-layout="full"]) {
     cursor: pointer;
     margin: 0;
     white-space: nowrap;
+    width: 80px;
   }
   &[data-layout="full"] {
     position: fixed;
     top: 5px;
     left: 5px;
     right: 5px;
-    z-index: 1000;
+    z-index: 11111111112;
   }
 }
 #donor-ticker {
