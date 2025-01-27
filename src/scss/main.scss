@@ -13,19 +13,19 @@ body:has(#ticker-container[data-layout="full"]) {
   display: flex;
   align-items: center;
   gap: 1rem;
-  border: 2px solid #132a44;
+  border: 2px solid #00ad85;
   margin-bottom: 1rem;
   button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    background-color: #132a44;
+    background-color: #00ad85;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin: 0;
     white-space: nowrap;
-    width: 80px;
+    width: 85px;
   }
   &[data-layout="full"] {
     position: fixed;
