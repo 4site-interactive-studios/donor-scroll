@@ -8,7 +8,6 @@ body:has(#ticker-container[data-layout="full"]) {
 }
 #ticker-container {
   background-color: #e8e8e8;
-  border-radius: 10px;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -19,9 +18,8 @@ body:has(#ticker-container[data-layout="full"]) {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     background-color: #00ad85;
-    color: white;
+    color: var(--recurring-frequency__button_color, #000);
     border: none;
-    border-radius: 5px;
     cursor: pointer;
     margin: 0;
     white-space: nowrap;
