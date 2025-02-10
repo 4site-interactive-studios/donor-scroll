@@ -6,6 +6,10 @@ body:has(#ticker-container[data-layout="full"]) {
     padding-top: 60px;
   }
 }
+.en__component--codeblock:has(#ticker-container) {
+  max-width: 100%;
+  overflow: hidden;
+}
 #ticker-container {
   background-color: #e8e8e8;
   padding: 10px;
