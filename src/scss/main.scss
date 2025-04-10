@@ -11,23 +11,25 @@ body:has(#ticker-container[data-layout="full"]) {
   overflow: hidden;
 }
 #ticker-container {
-  background-color: #e8e8e8;
   padding: 10px;
   display: flex;
   align-items: center;
   gap: 1rem;
-  border: 2px solid #00ad85;
+  border: 2px solid #000;
   margin-bottom: 1rem;
   button {
-    padding: 0.5rem 1rem;
+    padding: 0;
     font-size: 1rem;
-    background-color: #00ad85;
-    color: var(--recurring-frequency__button_color, #000);
+    background-color: #000;
+    color: #fff;
     border: none;
     cursor: pointer;
     margin: 0;
     white-space: nowrap;
     width: 85px;
+    height: 30px;
+    line-height: 0;
+    border-radius: 5px;
   }
   &[data-layout="full"] {
     position: fixed;
@@ -43,7 +45,9 @@ body:has(#ticker-container[data-layout="full"]) {
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
-  line-height: 1.4;
+  line-height: 0;
+  height: 100%;
+  min-height: 30px;
   &[data-playing="false"] {
     .ticker {
       animation-play-state: paused;
@@ -63,6 +67,8 @@ body:has(#ticker-container[data-layout="full"]) {
     animation-name: tickerNews;
     -webkit-animation-duration: 250s;
     animation-duration: 250s;
+    height: 30px;
+    align-items: center;
     &:hover {
       animation-play-state: paused;
     }
@@ -72,7 +78,8 @@ body:has(#ticker-container[data-layout="full"]) {
     padding: 0 2rem;
     font-size: 1.125rem;
     color: #555;
-    line-height: 2rem;
+    line-height: 1;
+    height: 15px;
     font-weight: 700;
     user-select: none;
     &:hover {
