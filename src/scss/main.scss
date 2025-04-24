@@ -17,6 +17,7 @@ body:has(#ticker-container[data-layout="full"]) {
   gap: 1rem;
   border: 2px solid #000;
   margin-bottom: 1rem;
+  background-color: #fff;
   button {
     padding: 0;
     font-size: 1rem;
@@ -37,6 +38,86 @@ body:has(#ticker-container[data-layout="full"]) {
     left: 5px;
     right: 5px;
     z-index: 11111111112;
+  }
+  &[data-layout="single-up"] {
+    position: fixed;
+    width: 300px;
+    bottom: 0;
+    left: max(50vw, 750px);
+    z-index: 11111111112;
+    padding: 15px 20px;
+    button {
+      display: none;
+    }
+    // On this layout, the ticker fades in every name individually
+    .ticker {
+      animation: none;
+      width: 100%;
+      position: relative;
+    }
+
+    .ticker__item {
+      position: absolute;
+      opacity: 0;
+      background-color: #fff;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.5s ease-in-out;
+      padding: 0 5px;
+      &.active {
+        opacity: 1;
+      }
+      span {
+        width: auto;
+        &:last-child {
+          color: var(--donation-amount__button_color);
+          // Mode to the right
+          text-align: right;
+          flex-grow: 1;
+        }
+        &:nth-last-child(2) {
+          font-weight: 400;
+        }
+      }
+    }
+    // Below 1200px, change the style back to the default (not full width)
+    @media (max-width: 1200px) {
+      position: relative;
+      width: auto;
+      bottom: auto;
+      left: auto;
+      z-index: auto;
+
+      button {
+        display: block;
+        margin-left: auto;
+      }
+      .ticker {
+        animation: tickerNews 250s linear infinite;
+        width: auto;
+        position: static;
+        transition: transform 0.1s linear;
+        .ticker__item {
+          position: static;
+          opacity: 1;
+          background-color: transparent;
+          width: auto;
+          height: auto;
+          line-height: 1;
+          display: inline-block;
+          gap: 0;
+          transition: none;
+          padding: 0 2rem;
+          &.active {
+            opacity: 1;
+          }
+        }
+      }
+    }
   }
 }
 #donor-ticker {

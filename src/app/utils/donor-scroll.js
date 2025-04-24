@@ -2,11 +2,7 @@ const shuffleSeed = require("shuffle-seed");
 
 export class DonorScroll {
   constructor() {
-    if (
-      !document.querySelector(".donor-list") &&
-      !document.querySelector("#donor-ticker")
-    )
-      return;
+    if (!document.querySelector("#donor-ticker")) return;
 
     this.donors = [];
     // Retrieve saved state from localStorage
@@ -138,7 +134,7 @@ export class DonorScroll {
       donors = donors.concat(shuffleSeed.shuffle(this.donors, seed));
     }
 
-    return shuffleSeed.shuffle(donors, seed).slice(0, total);
+    return shuffleSeed.shuffle(donors, seed).slice(1, total);
   }
 
   getSeed() {
@@ -174,6 +170,32 @@ export class DonorScroll {
     tickerElement.innerHTML = `<div class="ticker">${donors
       .map((donor) => `<div class="ticker__item">${donor}</div>`)
       .join("")}</div>`;
+
+    if (this.layout === "single-up") {
+      const items = tickerElement.querySelectorAll(".ticker__item");
+      items.forEach((item) => {
+        // Surround each word with a span
+        const words = item.innerText.split(" ");
+        item.innerHTML = words
+          .map((word) => `<span class="ticker__word">${word}</span>`)
+          .join(" ");
+      });
+      // Add the "active" class to the first item
+      items[0].classList.add("active");
+      // Toggle the class "active" to each item every 3.5 seconds
+      setInterval(() => {
+        const activeItem = tickerElement.querySelector(".ticker__item.active");
+        if (activeItem) {
+          const nextItem = activeItem.nextElementSibling || items[0];
+          activeItem.classList.remove("active");
+          window.setTimeout(() => {
+            nextItem.classList.add("active");
+          }, 500);
+        } else {
+          items[0].classList.add("active");
+        }
+      }, 3500);
+    }
   }
 
   addAccessibilityControls() {
