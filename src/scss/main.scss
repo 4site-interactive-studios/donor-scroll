@@ -18,6 +18,22 @@ body:has(#ticker-container[data-layout="full"]) {
   border: 2px solid #000;
   margin-bottom: 1rem;
   background-color: #fff;
+  border-radius: 5px;
+  &.has-heading {
+    padding-top: 50px !important;
+  }
+  h2 {
+    width: 100%;
+    flex-basis: 100%;
+    position: absolute;
+    bottom: 45px;
+    left: 1px;
+    white-space: nowrap;
+    line-height: 1;
+    color: #333;
+    font-size: 0.9rem;
+    text-align: center;
+  }
   button {
     padding: 0;
     font-size: 1rem;
@@ -41,9 +57,9 @@ body:has(#ticker-container[data-layout="full"]) {
   }
   &[data-layout="single-up"] {
     position: fixed;
-    width: 300px;
+    width: 250px;
     bottom: 0;
-    left: max(50vw, 750px);
+    left: max(62vw, 750px);
     z-index: 11111111112;
     padding: 15px 20px;
     button {
@@ -86,22 +102,26 @@ body:has(#ticker-container[data-layout="full"]) {
     }
     // Below 1200px, change the style back to the default (not full width)
     @media (max-width: 1200px) {
+      padding: 10px 15px;
+      margin-bottom: 1.5rem;
+      border-radius: 0;
       position: relative;
       width: auto;
       bottom: auto;
       left: auto;
       z-index: auto;
 
-      button {
-        display: block;
-        margin-left: auto;
-      }
+      // button {
+      //   display: block;
+      //   margin-left: auto;
+      // }
       .ticker {
         animation: tickerNews 250s linear infinite;
         width: auto;
         position: static;
         transition: transform 0.1s linear;
         .ticker__item {
+          font-size: 0.9rem;
           position: static;
           opacity: 1;
           background-color: transparent;

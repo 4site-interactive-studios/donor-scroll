@@ -5,6 +5,7 @@ export class DonorScroll {
     if (!document.querySelector("#donor-ticker")) return;
 
     this.donors = [];
+    this.heading = "";
     // Retrieve saved state from localStorage
     const savedState = this.getLocalStorage("tickerState");
     // Set initial state and label
@@ -15,6 +16,12 @@ export class DonorScroll {
     ).matches;
 
     const donorList = document.querySelectorAll(".donor-list li");
+    const heading = document.querySelector(
+      ".donor-list h1, .donor-list h2, .donor-list h3"
+    );
+    if (heading) {
+      this.heading = heading.innerText;
+    }
     if (donorList.length > 0) {
       donorList.forEach((donor) => this.donors.push(donor.innerText));
     } else {
@@ -100,6 +107,13 @@ export class DonorScroll {
   createTickerContainer() {
     const parentContainer = document.createElement("div");
     parentContainer.id = "ticker-container";
+
+    if (this.heading) {
+      const headingElement = document.createElement("h2");
+      headingElement.innerText = this.heading;
+      parentContainer.appendChild(headingElement);
+      parentContainer.classList.add("has-heading");
+    }
 
     const existingTicker = document.querySelector("#donor-ticker");
     if (existingTicker) {
